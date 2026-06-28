@@ -7,9 +7,22 @@
     <style>
         :root { --primary: #0056b3; }
         body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
+        .skip {
+            position: absolute;
+            top: -40px;
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: top 0.2s ease-in-out;
+            z-index: 100;
+        }
         .skip:focus { top: 0; }
         main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :focus-visible {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
