@@ -10,6 +10,9 @@
         .skip { position: absolute; top: -40px; }
         .skip:focus { top: 0; }
         main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        .hotline { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--primary); }
+        #copy-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        #copy-btn:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -17,6 +20,20 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <section class="hotline">
+            <p>Official Hotline: <span id="num">09606 700 700</span></p>
+            <button id="copy-btn" aria-label="Copy hotline number">Copy</button>
+        </section>
     </main>
+    <script>
+        const btn = document.getElementById('copy-btn');
+        btn.onclick = () => {
+            navigator.clipboard.writeText(document.getElementById('num').innerText);
+            const oldText = btn.innerText;
+            btn.innerText = 'Copied!';
+            btn.setAttribute('aria-label', 'Copied');
+            setTimeout(() => { btn.innerText = oldText; btn.setAttribute('aria-label', 'Copy hotline number'); }, 2000);
+        };
+    </script>
 </body>
 </html>
