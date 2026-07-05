@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; --light: #f8f9fa; }
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .skip { position: absolute; top: -40px; background: var(--primary); color: white; padding: 8px; z-index: 100; text-decoration: none; }
         .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
+        footer { background: var(--light); border-top: 1px solid #dee2e6; padding: 20px; text-align: center; }
+        .hotline-container { display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .copy-btn { background: var(--primary); color: white; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
+        .copy-btn:hover { background: var(--primary-hover); }
+        .copy-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        .copy-btn.success { background: var(--success); }
     </style>
 </head>
 <body>
@@ -18,5 +24,29 @@
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
     </main>
+    <footer>
+        <div class="hotline-container">
+            <span>Hotline: <a href="tel:09606700700" id="hotline" style="color: inherit; text-decoration: none; font-weight: bold;">09606 700 700</a></span>
+            <button id="copy-btn" class="copy-btn" aria-label="Copy hotline number to clipboard">Copy</button>
+        </div>
+    </footer>
+    <script>
+        const copyBtn = document.getElementById('copy-btn');
+        const hotlineText = document.getElementById('hotline');
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(hotlineText.innerText);
+                const originalText = copyBtn.innerText, originalAria = copyBtn.getAttribute('aria-label');
+                copyBtn.innerText = 'Copied!';
+                copyBtn.classList.add('success');
+                copyBtn.setAttribute('aria-label', 'Hotline number copied to clipboard');
+                setTimeout(() => {
+                    copyBtn.innerText = originalText;
+                    copyBtn.classList.remove('success');
+                    copyBtn.setAttribute('aria-label', originalAria);
+                }, 2000);
+            } catch (err) { console.error('Failed to copy: ', err); }
+        });
+    </script>
 </body>
 </html>
