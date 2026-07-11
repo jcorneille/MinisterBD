@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .skip { position: absolute; top: -40px; left: 10px; background: var(--primary); color: white; padding: 8px; z-index: 100; transition: top 0.2s; }
         .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
+        footer { background: #f8f9fa; border-top: 1px solid #dee2e6; padding: 20px; text-align: center; }
+        .contact-info { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; align-items: center; }
+        .copy-btn { background: var(--primary); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin-left: 8px; }
+        .copy-btn:hover { background: var(--primary-hover); }
+        .copy-btn.success { background: var(--success); }
     </style>
 </head>
 <body>
@@ -18,5 +23,32 @@
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
     </main>
+    <footer>
+        <div class="contact-info">
+            <span>Hotline: <a href="tel:09606700700">09606 700 700</a>
+                <button id="copyHotline" class="copy-btn" aria-label="Copy hotline number to clipboard">Copy</button>
+            </span>
+            <span>Email: <a href="mailto:info@ministerbd.com">info@ministerbd.com</a></span>
+        </div>
+    </footer>
+    <script>
+        document.getElementById('copyHotline').addEventListener('click', function() {
+            const btn = this;
+            const number = '09606700700';
+            if (!navigator.clipboard) return;
+            navigator.clipboard.writeText(number).then(() => {
+                const originalText = btn.textContent;
+                const originalAria = btn.getAttribute('aria-label');
+                btn.textContent = 'Copied!';
+                btn.classList.add('success');
+                btn.setAttribute('aria-label', 'Hotline number copied to clipboard');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('success');
+                    btn.setAttribute('aria-label', originalAria);
+                }, 2000);
+            });
+        });
+    </script>
 </body>
 </html>
