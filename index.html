@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .skip { position: absolute; top: -40px; transition: top 0.2s ease; }
+        .skip:focus-visible { top: 0; }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
+        .hotline-card { display: inline-flex; align-items: center; background: #f0f4f8; padding: 10px 15px; border-radius: 8px; margin-top: 20px; font-weight: 500; }
+        .hotline-card a { color: var(--primary); text-decoration: none; margin-left: 5px; }
+        .hotline-card a:hover { text-decoration: underline; }
+        .hotline-card .copy-btn { background: var(--primary); color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px; transition: background 0.2s; margin-left: 10px; font-size: 14px; }
+        .hotline-card .copy-btn:hover { background: var(--primary-hover); }
+        .hotline-card .copy-btn.success { background: var(--success); }
+        footer { text-align: center; padding: 20px; font-size: 14px; background: #f8f9fa; border-top: 1px solid #e9ecef; }
     </style>
 </head>
 <body>
@@ -17,6 +24,29 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <div class="hotline-card">
+            <span>Customer Support Hotline:</span>
+            <a id="hotline-link" href="tel:09606700700" aria-label="Call hotline 0 9 6 0 6 7 0 0 7 0 0">09606 700 700</a>
+            <button id="copy-btn" class="copy-btn" aria-label="Copy hotline number" style="display: none;">Copy</button>
+        </div>
     </main>
+    <footer>&copy; 2026 Minister Hi-Tech Park Limited. All rights reserved.</footer>
+    <script>
+        const btn = document.getElementById('copy-btn'), link = document.getElementById('hotline-link');
+        if (navigator.clipboard && btn) {
+            btn.style.display = 'inline-block';
+            let timer;
+            btn.addEventListener('click', () => {
+                const num = link.getAttribute('href').replace('tel:', '');
+                navigator.clipboard.writeText(num).then(() => {
+                    clearTimeout(timer);
+                    btn.textContent = 'Copied!'; btn.classList.add('success'); btn.setAttribute('aria-label', 'Hotline number copied');
+                    timer = setTimeout(() => {
+                        btn.textContent = 'Copy'; btn.classList.remove('success'); btn.setAttribute('aria-label', 'Copy hotline number');
+                    }, 2000);
+                });
+            });
+        }
+    </script>
 </body>
 </html>
