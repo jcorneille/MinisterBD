@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .skip { position: absolute; top: -40px; background: var(--primary); color: white; padding: 8px 16px; transition: top 0.2s; text-decoration: none; }
+        .skip:focus-visible { top: 0; outline: 2px solid var(--primary); }
+        :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        main { flex: 1; max-width: 800px; margin: 40px auto; padding: 20px; }
+        footer { background: #f8f9fa; padding: 20px; border-top: 1px solid #e9ecef; text-align: center; }
+        .contact-item { display: inline-flex; align-items: center; gap: 8px; margin: 0 15px; }
+        .btn-copy { background: none; border: 1px solid var(--primary); color: var(--primary); cursor: pointer; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; transition: all 0.2s; }
+        .btn-copy:hover { background: var(--primary-hover); color: white; }
+        .btn-copy.success { background: var(--success); border-color: var(--success); color: white; }
     </style>
 </head>
 <body>
@@ -18,5 +24,42 @@
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
     </main>
+    <footer>
+        <div class="contact-item">
+            <span>Hotline:</span>
+            <a id="phone-link" href="tel:09606700700" aria-label="Call hotline 0 9 6 0 6 7 0 0 7 0 0">09606 700 700</a>
+            <button class="btn-copy" data-target="phone-link" aria-label="Copy hotline number">Copy</button>
+        </div>
+        <div class="contact-item">
+            <span>Email:</span>
+            <a id="email-link" href="mailto:info@ministerbd.com" aria-label="Send email to info @ ministerbd . com">info@ministerbd.com</a>
+            <button class="btn-copy" data-target="email-link" aria-label="Copy email address">Copy</button>
+        </div>
+    </footer>
+    <script>
+        document.querySelectorAll('.btn-copy').forEach(btn => {
+            if (!navigator.clipboard) { btn.style.display = 'none'; return; }
+            let timer;
+            const origLabel = btn.getAttribute('aria-label');
+            const origText = btn.innerHTML;
+            btn.addEventListener('click', async () => {
+                const target = document.getElementById(btn.getAttribute('data-target'));
+                if (!target) return;
+                const value = target.getAttribute('href').replace(/^(tel:|mailto:)/, '');
+                try {
+                    await navigator.clipboard.writeText(value);
+                    clearTimeout(timer);
+                    btn.classList.add('success');
+                    btn.setAttribute('aria-label', 'Copied successfully');
+                    btn.innerHTML = 'Copied!';
+                    timer = setTimeout(() => {
+                        btn.classList.remove('success');
+                        btn.setAttribute('aria-label', origLabel);
+                        btn.innerHTML = origText;
+                    }, 1500);
+                } catch (err) { console.error(err); }
+            });
+        });
+    </script>
 </body>
 </html>
