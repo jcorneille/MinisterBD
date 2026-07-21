@@ -5,11 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root {
+            --primary: #0056b3;
+            --primary-hover: #004494;
+            --success: #1e7e34;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #333;
+        }
+        .skip {
+            position: absolute;
+            top: -40px;
+            left: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: top 0.2s ease;
+            z-index: 100;
+        }
+        .skip:focus-visible {
+            top: 10px;
+            outline: 2px solid var(--primary-hover);
+        }
+        main {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            flex: 1;
+        }
+        footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            padding: 20px;
+            text-align: center;
+        }
+        .contact-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .phone-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+        .phone-link:hover, .phone-link:focus-visible {
+            color: var(--primary-hover);
+            outline: 2px solid var(--primary);
+            border-radius: 4px;
+        }
+        .copy-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+        .copy-btn:hover, .copy-btn:focus-visible {
+            background-color: var(--primary-hover);
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        .copy-btn.success {
+            background-color: var(--success);
+        }
     </style>
 </head>
 <body>
@@ -18,5 +91,54 @@
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
     </main>
+    <footer>
+        <div class="contact-info">
+            <span>Customer Care:</span>
+            <a href="tel:09606700700" class="phone-link" aria-label="Call hotline 0 9 6 0 6 7 0 0 7 0 0">09606 700 700</a>
+            <button class="copy-btn" id="copyHotline" aria-label="Copy hotline number to clipboard">Copy Hotline</button>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const copyBtn = document.getElementById('copyHotline');
+            const phoneLink = document.querySelector('.phone-link');
+            let timeoutId = null;
+
+            if (copyBtn && phoneLink) {
+                const originalText = copyBtn.textContent;
+                const originalAria = copyBtn.getAttribute('aria-label');
+                const rawNumber = phoneLink.getAttribute('href').replace('tel:', '');
+
+                copyBtn.addEventListener('click', async () => {
+                    try {
+                        if (navigator.clipboard) {
+                            await navigator.clipboard.writeText(rawNumber);
+                        } else {
+                            const tempInput = document.createElement('input');
+                            tempInput.value = rawNumber;
+                            document.body.appendChild(tempInput);
+                            tempInput.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(tempInput);
+                        }
+
+                        if (timeoutId) clearTimeout(timeoutId);
+
+                        copyBtn.textContent = 'Copied!';
+                        copyBtn.setAttribute('aria-label', 'Hotline number copied');
+                        copyBtn.classList.add('success');
+
+                        timeoutId = setTimeout(() => {
+                            copyBtn.textContent = originalText;
+                            copyBtn.setAttribute('aria-label', originalAria);
+                            copyBtn.classList.remove('success');
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy text: ', err);
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
