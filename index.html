@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .skip { position: absolute; top: -40px; background: var(--primary); color: #fff; padding: 8px; text-decoration: none; transition: top 0.2s ease; }
+        .skip:focus-visible { top: 0; }
+        *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
+        .hotline { margin-top: 30px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        .tel { color: var(--primary); text-decoration: none; font-weight: bold; font-size: 1.2rem; margin-right: 15px; }
+        .btn { background: var(--primary); color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background: var(--primary-hover); }
+        .hotline .btn.success { background-color: var(--success); }
     </style>
 </head>
 <body>
@@ -17,6 +23,26 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <div class="hotline">
+            <h2>Customer Support</h2>
+            <p>For inquiries, call our official hotline:</p>
+            <a id="tel" href="tel:09606700700" class="tel" aria-label="Call hotline 0 9 6 0 6 7 0 0 7 0 0">09606 700 700</a>
+            <button id="copy" class="btn" aria-label="Copy hotline number to clipboard">Copy</button>
+        </div>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const b = document.getElementById('copy'), l = document.getElementById('tel');
+            if (!b || !l || !navigator.clipboard) { if (b && !navigator.clipboard) b.style.display = 'none'; return; }
+            const ot = b.textContent, ol = b.getAttribute('aria-label'); let t = null;
+            b.addEventListener('click', () => {
+                navigator.clipboard.writeText(l.getAttribute('href').replace('tel:', '')).then(() => {
+                    if (t) clearTimeout(t);
+                    b.textContent = 'Copied!'; b.setAttribute('aria-label', 'Copied successfully'); b.classList.add('success');
+                    t = setTimeout(() => { b.textContent = ot; b.setAttribute('aria-label', ol); b.classList.remove('success'); }, 2000);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
