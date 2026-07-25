@@ -5,11 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .skip { position: absolute; top: -40px; transition: top 0.2s; }
+        .skip:focus-visible { top: 0; }
+        main { flex: 1; max-width: 800px; margin: 40px auto; padding: 20px; }
+        footer { text-align: center; padding: 20px; font-size: 0.9rem; color: #555; }
+        .card { border: 1px solid #ccc; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .link { color: var(--primary); font-weight: bold; text-decoration: none; }
+        .link:hover { color: var(--primary-hover); text-decoration: underline; }
+        .btn { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
+        .btn:hover { background: var(--primary-hover); }
+        .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        .card .btn.success { background: var(--success); }
     </style>
 </head>
 <body>
@@ -17,6 +26,37 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <div class="card">
+            <h2>Contact Us</h2>
+            <div class="row">
+                <div><strong>Hotline:</strong> <a id="phone-link" href="tel:09606700700" class="link" aria-label="Call hotline 0 9 6 0 6 7 0 0 7 0 0">09606 700 700</a></div>
+                <button id="copy-phone" class="btn" aria-label="Copy hotline number" style="display: none;">Copy</button>
+            </div>
+            <div class="row">
+                <div><strong>Email:</strong> <a id="email-link" href="mailto:info@ministerbd.com" class="link" aria-label="Send email to info@ministerbd.com">info@ministerbd.com</a></div>
+                <button id="copy-email" class="btn" aria-label="Copy email address" style="display: none;">Copy</button>
+            </div>
+        </div>
     </main>
+    <footer>© 2026 Minister Hi-Tech Park Limited</footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btns = [{b: document.getElementById('copy-phone'), l: document.getElementById('phone-link')}, {b: document.getElementById('copy-email'), l: document.getElementById('email-link')}];
+            let t = new Map();
+            if (navigator.clipboard) {
+                btns.forEach(({ b, l }) => {
+                    const origLbl = b.getAttribute('aria-label'), origTxt = b.textContent;
+                    b.style.display = 'inline-block';
+                    b.addEventListener('click', () => {
+                        if (t.has(b)) clearTimeout(t.get(b));
+                        navigator.clipboard.writeText(l.href.replace(/^(tel:|mailto:)/, '')).then(() => {
+                            b.textContent = 'Copied!'; b.classList.add('success'); b.setAttribute('aria-label', 'Copied successfully');
+                            t.set(b, setTimeout(() => { b.textContent = origTxt; b.classList.remove('success'); b.setAttribute('aria-label', origLbl); }, 2000));
+                        });
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 </html>
