@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        .skip { position: absolute; top: -40px; transition: top 0.2s; background: var(--primary); color: #fff; padding: 8px; text-decoration: none; }
+        .skip:focus-visible { top: 0; }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
+        footer { background: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #eef; }
+        .support { display: flex; gap: 10px; align-items: center; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        .btn { background: var(--primary); color: #fff; border: none; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 14px; cursor: pointer; transition: background 0.2s; display: inline-block; }
+        .btn:hover { background: var(--primary-hover); }
+        .support .btn.success { background: var(--success); }
     </style>
 </head>
 <body>
@@ -17,6 +23,28 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <div class="support">
+            <a href="tel:09606700700" class="btn" id="hotline" aria-label="Call hotline 0 9 6 0 6 7 0 0 7 0 0">Call Hotline: 09606 700 700</a>
+            <button class="btn" id="copy-btn" aria-label="Copy hotline phone number" style="display: none;">Copy Number</button>
+            <a href="mailto:info@ministerbd.com" class="btn" aria-label="Email support at info@ministerbd.com">Email Support</a>
+        </div>
     </main>
+    <footer><p>&copy; 2026 Minister Hi-Tech Park Limited. All rights reserved.</p></footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('copy-btn'), h = document.getElementById('hotline');
+            if (navigator.clipboard && btn) {
+                btn.style.display = 'inline-block';
+                let tid = null; const ol = btn.getAttribute('aria-label'), ot = btn.textContent;
+                btn.addEventListener('click', () => {
+                    if (tid) clearTimeout(tid);
+                    navigator.clipboard.writeText(h.getAttribute('href').replace('tel:', '')).then(() => {
+                        btn.textContent = 'Copied!'; btn.setAttribute('aria-label', 'Phone number copied successfully'); btn.classList.add('success');
+                        tid = setTimeout(() => { btn.textContent = ot; btn.setAttribute('aria-label', ol); btn.classList.remove('success'); }, 2000);
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 </html>
