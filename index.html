@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .skip { position: absolute; top: -40px; transition: top 0.2s; }
+        .skip:focus, .skip:focus-visible { top: 0; outline: 2px solid var(--primary); }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
+        footer { background: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e9ecef; }
+        .contact-item { display: inline-flex; align-items: center; margin: 10px 20px; gap: 8px; }
+        .btn-copy { background: var(--primary); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; transition: background 0.2s; font-size: 0.85em; }
+        .btn-copy:hover { background: var(--primary-hover); }
+        .btn-copy.success { background: var(--success); }
     </style>
 </head>
 <body>
@@ -18,5 +23,34 @@
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
     </main>
+    <footer>
+        <div class="contact-item">
+            <a href="tel:09606700700" aria-label="Call hotline 0 9 6 0 6 7 0 0 7 0 0">Hotline: 09606 700 700</a>
+            <button class="btn-copy" aria-label="Copy hotline phone number">Copy</button>
+        </div>
+        <div class="contact-item">
+            <a href="mailto:info@ministerbd.com">Email: info@ministerbd.com</a>
+            <button class="btn-copy" aria-label="Copy email address">Copy</button>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!navigator.clipboard) { document.querySelectorAll('.btn-copy').forEach(b => b.style.display = 'none'); return; }
+            const originalTexts = new Map(), timeouts = new Map();
+            document.querySelectorAll('.btn-copy').forEach(btn => {
+                originalTexts.set(btn, btn.textContent);
+                btn.addEventListener('click', () => {
+                    const link = btn.previousElementSibling; if (!link) return;
+                    const copyText = (link.getAttribute('href') || '').replace(/^(tel:|mailto:)/, '');
+                    navigator.clipboard.writeText(copyText).then(() => {
+                        if (timeouts.has(btn)) clearTimeout(timeouts.get(btn));
+                        btn.textContent = 'Copied!'; btn.classList.add('success');
+                        const t = setTimeout(() => { btn.textContent = originalTexts.get(btn); btn.classList.remove('success'); timeouts.delete(btn); }, 2000);
+                        timeouts.set(btn, t);
+                    }).catch(() => {});
+                });
+            });
+        });
+    </script>
 </body>
 </html>
