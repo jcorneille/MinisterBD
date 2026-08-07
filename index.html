@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .skip { position: absolute; top: -40px; background: var(--primary); color: white; padding: 8px; z-index: 10; transition: top 0.2s; text-decoration: none; }
+        .skip:focus, .skip:focus-visible { top: 0; outline: 2px solid var(--primary); }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
+        footer { padding: 20px; text-align: center; border-top: 1px solid #ccc; background: #f9f9f9; }
+        #copy-btn { margin-left: 10px; background: var(--primary); color: #fff; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+        #copy-btn:hover { background: var(--primary-hover); }
+        #copy-btn.success { background: var(--success); }
     </style>
 </head>
 <body>
@@ -18,5 +22,24 @@
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
     </main>
+    <footer>
+        <p>Minister Hi-Tech Park Hotline: <a href="tel:09606700700" aria-label="Call hotline 0 9 6 0 6 7 0 0 7 0 0" style="color: var(--primary); text-decoration: none; font-weight: bold;">09606 700 700</a> <button id="copy-btn" aria-label="Copy hotline to clipboard">Copy</button></p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('copy-btn');
+            if (!btn || !navigator.clipboard) { if (btn) btn.style.display = 'none'; return; }
+            const origTxt = btn.textContent, origAria = btn.getAttribute('aria-label');
+            let tId = null;
+            btn.addEventListener('click', () => {
+                const link = document.querySelector('footer a[href^="tel:"]');
+                if (link) navigator.clipboard.writeText(link.getAttribute('href').replace('tel:', '')).then(() => {
+                    if (tId) clearTimeout(tId);
+                    btn.textContent = 'Copied!'; btn.setAttribute('aria-label', 'Copied successfully!'); btn.classList.add('success');
+                    tId = setTimeout(() => { btn.textContent = origTxt; btn.setAttribute('aria-label', origAria); btn.classList.remove('success'); }, 2000);
+                }).catch(() => {});
+            });
+        });
+    </script>
 </body>
 </html>
