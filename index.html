@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .skip { position: absolute; top: -40px; transition: top 0.2s; background: var(--primary); color: white; padding: 8px 16px; text-decoration: none; z-index: 100; }
+        .skip:focus, .skip:focus-visible { top: 0; outline: 2px solid var(--primary); }
+        main { flex: 1; max-width: 800px; margin: 40px auto; padding: 20px; width: 100%; box-sizing: border-box; }
+        .card { border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-top: 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; font-size: 14px; text-decoration: none; }
+        .btn:hover { background: var(--primary-hover); }
+        .card .btn.success { background: var(--success); }
+        .phone { color: var(--primary); font-weight: bold; text-decoration: none; font-size: 18px; }
+        .phone:hover { text-decoration: underline; }
+        footer { background: #f8f9fa; padding: 15px; text-align: center; border-top: 1px solid #e9ecef; }
     </style>
 </head>
 <body>
@@ -17,6 +24,28 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <div class="card">
+            <div><span style="display:block;margin-bottom:5px;color:#555;">Hotline:</span><a href="tel:09606700700" class="phone" id="phone-hotline" aria-label="Call hotline 0 9 6 0 6 7 0 0 7 0 0">09606 700 700</a></div>
+            <button id="copy-btn" class="btn" aria-label="Copy phone number" style="display:none;">Copy</button>
+        </div>
     </main>
+    <footer><p style="margin:0;font-size:12px;color:#666;">&copy; 2026 Minister Hi-Tech Park Limited</p></footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('copy-btn'), lnk = document.getElementById('phone-hotline');
+            if (navigator.clipboard && btn && lnk) {
+                btn.style.display = 'inline-flex';
+                const origT = btn.textContent, origA = btn.getAttribute('aria-label');
+                let tid = null;
+                btn.addEventListener('click', () => {
+                    navigator.clipboard.writeText(lnk.getAttribute('href').replace('tel:', '')).then(() => {
+                        if (tid) clearTimeout(tid);
+                        btn.textContent = 'Copied!'; btn.setAttribute('aria-label', 'Copied'); btn.classList.add('success');
+                        tid = setTimeout(() => { btn.textContent = origT; btn.setAttribute('aria-label', origA); btn.classList.remove('success'); }, 2000);
+                    }).catch(() => {});
+                });
+            }
+        });
+    </script>
 </body>
 </html>
