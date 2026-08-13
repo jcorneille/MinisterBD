@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .skip { position: absolute; top: -40px; transition: top 0.2s; }
+        .skip:focus, .skip:focus-visible { top: 0; outline: 2px solid var(--primary); }
+        :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
+        .card { border: 1px solid #ccc; padding: 12px; border-radius: 6px; margin-top: 15px; max-width: 320px; }
+        .btn { background: var(--primary); color: #fff; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin-left: 6px; }
+        .btn:hover { background: var(--primary-hover); }
+        .card .btn.success { background: var(--success); }
     </style>
 </head>
 <body>
@@ -17,6 +22,28 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <div class="card" id="contact-card">
+            <h3>Contact Us</h3>
+            <p>Hotline: <a id="hotline-link" href="tel:09606700700" aria-label="Call hotline 0 9 6 0 6 7 0 0 7 0 0">09606 700 700</a><button id="copy-btn" class="btn" aria-label="Copy hotline number">Copy</button></p>
+        </div>
     </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const btn = document.getElementById("copy-btn"), link = document.getElementById("hotline-link");
+            if (!navigator.clipboard) { btn.style.display = "none"; return; }
+            const origText = btn.textContent, origAria = btn.getAttribute("aria-label");
+            let timeoutId = null;
+            btn.addEventListener("click", () => {
+                if (timeoutId) clearTimeout(timeoutId);
+                const rawVal = link.getAttribute("href").replace("tel:", "");
+                navigator.clipboard.writeText(rawVal).then(() => {
+                    btn.textContent = "Copied!"; btn.setAttribute("aria-label", "Copied to clipboard"); btn.classList.add("success");
+                    timeoutId = setTimeout(() => {
+                        btn.textContent = origText; btn.setAttribute("aria-label", origAria); btn.classList.remove("success");
+                    }, 2000);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
