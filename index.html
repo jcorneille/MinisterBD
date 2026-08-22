@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+        .skip { position: absolute; top: -40px; transition: top 0.2s; }
+        .skip:focus, .skip:focus-visible { top: 0; }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
+        .card { border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-top: 24px; }
+        .hotline { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+        .btn { background: var(--primary); color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .btn:hover { background: var(--primary-hover); }
+        .btn.success { background: var(--success); }
     </style>
 </head>
 <body>
@@ -17,6 +22,35 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <section class="card" aria-labelledby="support-heading">
+            <h2 id="support-heading" style="margin-top:0;">Customer Support</h2>
+            <p>Have questions? Reach our official hotline for assistance.</p>
+            <div class="hotline">
+                <a href="tel:09606700700" id="hotline-link" aria-label="Call hotline 0 9 6 0 6 7 0 0 7 0 0">09606 700 700</a>
+                <button id="copy-btn" class="btn" aria-label="Copy hotline phone number">Copy Number</button>
+            </div>
+        </section>
     </main>
+    <script>
+        const copyBtn = document.getElementById('copy-btn');
+        let timer = null;
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText('09606700700').then(() => {
+                        copyBtn.textContent = 'Copied!';
+                        copyBtn.setAttribute('aria-label', 'Hotline phone number copied');
+                        copyBtn.classList.add('success');
+                        if (timer) clearTimeout(timer);
+                        timer = setTimeout(() => {
+                            copyBtn.textContent = 'Copy Number';
+                            copyBtn.setAttribute('aria-label', 'Copy hotline phone number');
+                            copyBtn.classList.remove('success');
+                        }, 2000);
+                    });
+                }
+            });
+        }
+    </script>
 </body>
 </html>
