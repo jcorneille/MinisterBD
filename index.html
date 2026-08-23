@@ -8,8 +8,9 @@
         :root { --primary: #0056b3; }
         body { font-family: sans-serif; margin: 0; }
         .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
+        .skip:focus, .skip:focus-visible { top: 0; }
         main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        a { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -17,6 +18,10 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <section aria-labelledby="support-heading">
+            <h2 id="support-heading">Customer Support</h2>
+            <p>Hotline: <a href="tel:09606700700">09606 700 700</a></p>
+        </section>
     </main>
 </body>
 </html>
