@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
+        :root { --primary: #0056b3; --success: #1e7e34; }
         body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
+        .skip { position: absolute; top: -40px; transition: top 0.2s; }
+        .skip:focus, .skip:focus-visible { top: 0; background: var(--primary); color: #fff; padding: 8px; z-index: 100; }
+        :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
         main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        .card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin-top: 24px; background: #fafafa; }
+        .contact-item { display: flex; align-items: center; justify-content: space-between; margin: 12px 0; gap: 12px; }
+        .copy-btn { background: var(--primary); color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+        .copy-btn.copied { background: var(--success); }
     </style>
 </head>
 <body>
@@ -17,6 +22,34 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <section class="card" aria-labelledby="contact-heading">
+            <h2 id="contact-heading" style="margin-top: 0;">Customer Support & Hotline</h2>
+            <div class="contact-item">
+                <span>Hotline: <a href="tel:09606700700">09606 700 700</a></span>
+                <button class="copy-btn" onclick="copyText('09606 700 700', this)" aria-label="Copy hotline number">Copy</button>
+            </div>
+            <div class="contact-item">
+                <span>Email: <a href="mailto:info@ministerbd.com">info@ministerbd.com</a></span>
+                <button class="copy-btn" onclick="copyText('info@ministerbd.com', this)" aria-label="Copy email address">Copy</button>
+            </div>
+        </section>
     </main>
+    <script>
+        function copyText(text, btn) {
+            if (!navigator.clipboard) return;
+            const origText = btn.textContent;
+            const origLabel = btn.getAttribute('aria-label');
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                btn.setAttribute('aria-label', `Copied ${text}`);
+                setTimeout(() => {
+                    btn.textContent = origText;
+                    btn.classList.remove('copied');
+                    btn.setAttribute('aria-label', origLabel);
+                }, 2000);
+            });
+        }
+    </script>
 </body>
 </html>
