@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+        .skip { position: absolute; top: -40px; transition: top 0.2s; background: #fff; padding: 8px; z-index: 100; }
+        .skip:focus, .skip:focus-visible { top: 0; }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
+        .card { border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-top: 20px; }
+        .hotline-btn { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-left: 8px; }
+        .hotline-btn:hover { background: var(--primary-hover); }
+        .hotline-btn.success { background: var(--success); }
+        .hotline-link { color: var(--primary); text-decoration: none; font-weight: bold; }
+        .hotline-link:hover { text-decoration: underline; }
+        *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
     </style>
 </head>
 <body>
@@ -17,6 +24,34 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <section class="card" aria-labelledby="support-heading">
+            <h2 id="support-heading" style="margin-top:0;">Customer Support Hotline</h2>
+            <p>For immediate assistance, contact our hotline: <a href="tel:09606700700" class="hotline-link" id="hotline-num">09606 700 700</a>
+            <button id="copy-btn" class="hotline-btn" aria-label="Copy hotline phone number">Copy Number</button></p>
+            <div id="status" aria-live="polite" style="position:absolute;left:-9999px;"></div>
+        </section>
     </main>
+    <script>
+        const btn = document.getElementById('copy-btn');
+        const statusEl = document.getElementById('status');
+        let timer;
+        if (btn) {
+            btn.addEventListener('click', () => {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText('09606700700').then(() => {
+                        clearTimeout(timer);
+                        btn.textContent = 'Copied!';
+                        btn.classList.add('success');
+                        statusEl.textContent = 'Hotline number 09606 700 700 copied to clipboard.';
+                        timer = setTimeout(() => {
+                            btn.textContent = 'Copy Number';
+                            btn.classList.remove('success');
+                            statusEl.textContent = '';
+                        }, 2000);
+                    });
+                }
+            });
+        }
+    </script>
 </body>
 </html>
