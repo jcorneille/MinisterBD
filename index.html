@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
         body { font-family: sans-serif; margin: 0; }
         .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
+        .skip:focus, .skip:focus-visible { top: 0; }
         main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        .contact-card { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+        .hotline-link { color: var(--primary); font-weight: bold; font-size: 1.1rem; text-decoration: none; }
+        .hotline-link:hover { text-decoration: underline; color: var(--primary-hover); }
+        .copy-btn { background: var(--primary); color: #fff; border: none; border-radius: 6px; padding: 8px 14px; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; }
+        .copy-btn:hover { background: var(--primary-hover); }
+        .copy-btn.copied { background: var(--success); }
+        .copy-btn:focus-visible, .hotline-link:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
     </style>
 </head>
 <body>
@@ -17,6 +24,37 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <section class="contact-card" aria-label="Customer Support Hotline">
+            <div>
+                <strong>Hotline:</strong>
+                <a href="tel:09606700700" id="hotline-link" class="hotline-link">09606 700 700</a>
+            </div>
+            <button id="copy-hotline-btn" class="copy-btn" aria-label="Copy hotline number to clipboard">Copy Hotline</button>
+        </section>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('copy-hotline-btn');
+            const link = document.getElementById('hotline-link');
+            if (!btn || !link || !navigator.clipboard) return;
+            const originalText = btn.textContent;
+            const originalAria = btn.getAttribute('aria-label');
+            let timer = null;
+            btn.addEventListener('click', () => {
+                const phone = link.getAttribute('href').replace('tel:', '');
+                navigator.clipboard.writeText(phone).then(() => {
+                    if (timer) clearTimeout(timer);
+                    btn.textContent = 'Copied!';
+                    btn.setAttribute('aria-label', 'Hotline number copied to clipboard');
+                    btn.classList.add('copied');
+                    timer = setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.setAttribute('aria-label', originalAria);
+                        btn.classList.remove('copied');
+                    }, 2000);
+                }).catch(() => {});
+            });
+        });
+    </script>
 </body>
 </html>
