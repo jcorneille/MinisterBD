@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
-        body { font-family: sans-serif; margin: 0; }
-        .skip { position: absolute; top: -40px; }
-        .skip:focus { top: 0; }
-        main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
+        body { font-family: sans-serif; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+        .skip { position: absolute; top: -100px; left: 20px; background: var(--primary); color: #fff; padding: 8px 16px; transition: top 0.2s; text-decoration: none; z-index: 100; border-radius: 0 0 4px 4px; }
+        .skip:focus, .skip:focus-visible, .skip:active { top: 0 !important; outline: 2px solid #fff; }
+        main { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
+        .contact-card { margin-top: 24px; padding: 16px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; }
+        .contact-card a { color: var(--primary); text-decoration: underline; font-weight: bold; }
+        .contact-card a:hover, .contact-card a:focus-visible { color: var(--primary-hover); }
     </style>
 </head>
 <body>
@@ -17,6 +20,11 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <section class="contact-card" aria-labelledby="support-heading">
+            <h2 id="support-heading">Customer Care</h2>
+            <p>Hotline: <a href="tel:09606700700">09606 700 700</a></p>
+            <p>Email: <a href="mailto:info@ministerbd.com">info@ministerbd.com</a></p>
+        </section>
     </main>
 </body>
 </html>
