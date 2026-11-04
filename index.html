@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinisterBD</title>
     <style>
-        :root { --primary: #0056b3; }
+        :root { --primary: #0056b3; --primary-hover: #004494; --success: #1e7e34; }
         body { font-family: sans-serif; margin: 0; }
         .skip { position: absolute; top: -40px; }
         .skip:focus { top: 0; }
         main { max-width: 800px; margin: 40px auto; padding: 20px; }
+        .hotline-box { display: inline-flex; align-items: center; gap: 8px; background: #f0f4f8; padding: 8px 12px; border-radius: 6px; }
+        .copy-btn { font-size: 12px; padding: 4px 8px; border: 1px solid var(--primary); background: #fff; color: var(--primary); border-radius: 4px; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+        .copy-btn:hover { background: var(--primary-hover); color: #fff; }
+        .copy-btn.success { background: var(--success); border-color: var(--success); color: #fff; }
     </style>
 </head>
 <body>
@@ -17,6 +21,34 @@
     <main id="main">
         <h1>Welcome to MinisterBD</h1>
         <p>Developing an accessible experience for Minister Hi-Tech Park.</p>
+        <div class="hotline-box">
+            <span>Customer Hotline:</span>
+            <a id="hotline-link" href="tel:09606700700">09606 700 700</a>
+            <button id="copy-btn" class="copy-btn" type="button" aria-label="Copy hotline number">Copy</button>
+        </div>
     </main>
+    <script>
+        const copyBtn = document.getElementById('copy-btn');
+        const hotlineLink = document.getElementById('hotline-link');
+        if (copyBtn && hotlineLink && navigator.clipboard) {
+            let timeoutId = null;
+            const originalText = copyBtn.textContent;
+            const originalAria = copyBtn.getAttribute('aria-label');
+            copyBtn.addEventListener('click', () => {
+                const phone = hotlineLink.href.replace('tel:', '');
+                navigator.clipboard.writeText(phone).then(() => {
+                    if (timeoutId) clearTimeout(timeoutId);
+                    copyBtn.textContent = 'Copied!';
+                    copyBtn.setAttribute('aria-label', 'Hotline number copied to clipboard');
+                    copyBtn.classList.add('success');
+                    timeoutId = setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                        copyBtn.setAttribute('aria-label', originalAria);
+                        copyBtn.classList.remove('success');
+                    }, 2000);
+                }).catch(() => {});
+            });
+        }
+    </script>
 </body>
 </html>
